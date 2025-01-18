@@ -63,15 +63,15 @@ public class SwerveModule {
       int driveMotorChannel,
       int turningMotorChannel,
       int turningEncoderChannel,
-      boolean driveMotor,
-      boolean turningMotor,
-      boolean turningEncoder,
+      boolean driveMotorReversed,
+      boolean turningMotorReversed,
+      boolean turningEncoderReversed,
       Rotation2d encoderOffset) {
     m_driveMotor = new SparkMax(driveMotorChannel, MotorType.kBrushless);
     
     SparkMaxConfig config = new SparkMaxConfig();
     config.closedLoopRampRate(SwerveModuleConstants.kDriveMotorRampRate)
-      .inverted(driveMotor)
+      .inverted(driveMotorReversed)
       .smartCurrentLimit(SwerveModuleConstants.kDriveMotorCurrentLimit)
       .idleMode(IdleMode.kBrake);
     config.encoder
@@ -99,7 +99,7 @@ public class SwerveModule {
     m_absoluteRotationEncoder = new CANcoder(turningEncoderChannel);
     var turningEncoderConfigurator = m_absoluteRotationEncoder.getConfigurator();
     var encoderConfig = new CANcoderConfiguration();
-    encoderConfig.MagnetSensor.SensorDirection = turningEncoder
+    encoderConfig.MagnetSensor.SensorDirection = turningEncoderReversed
       ? SensorDirectionValue.Clockwise_Positive
       : SensorDirectionValue.CounterClockwise_Positive;
     encoderConfig.MagnetSensor.AbsoluteSensorDiscontinuityPoint = SwerveModuleConstants.kAbsoluteSensorDiscontinuityPoint;
@@ -116,7 +116,7 @@ public class SwerveModule {
 
     SparkMaxConfig turningConfig = new SparkMaxConfig();
     turningConfig.closedLoopRampRate(SwerveModuleConstants.kTurningMotorRampRate)
-      .inverted(turningMotor)
+      .inverted(turningMotorReversed)
       .smartCurrentLimit(SwerveModuleConstants.kTurningMotorCurrentLimit)
       .idleMode(IdleMode.kBrake);
     turningConfig.encoder

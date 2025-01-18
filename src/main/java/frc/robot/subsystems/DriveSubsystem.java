@@ -41,9 +41,9 @@ public class DriveSubsystem extends SubsystemBase {
           DriveConstants.kFrontLeftDriveMotorPort,
           DriveConstants.kFrontLeftTurningMotorPort,
           DriveConstants.kFrontLeftTurningEncoderPort,
-          DriveConstants.kFrontLeftDrive,
-          DriveConstants.kFrontLeftTurningMotor,
-          DriveConstants.kFrontLeftEncoder,
+          DriveConstants.kFrontLeftDriveReversed,
+          DriveConstants.kFrontLeftTurningMotorReversed,
+          DriveConstants.kFrontLeftEncoderReversed,
           DriveConstants.kFrontLeftEncoderOffset);
 
   private final SwerveModule m_rearLeft = //Q2
@@ -51,9 +51,9 @@ public class DriveSubsystem extends SubsystemBase {
           DriveConstants.kRearLeftDriveMotorPort,
           DriveConstants.kRearLeftTurningMotorPort,
           DriveConstants.kRearLeftTurningEncoderPorts,
-          DriveConstants.kRearLeftDrive,
-          DriveConstants.kRearLeftTurningMotor,
-          DriveConstants.kRearLeftEncoder,
+          DriveConstants.kRearLeftDriveReversed,
+          DriveConstants.kRearLeftTurningMotorReversed,
+          DriveConstants.kRearLeftEncoderReversed,
           DriveConstants.kRearLeftEncoderOffset);
 
   private final SwerveModule m_rearRight = //Q3
@@ -61,9 +61,9 @@ public class DriveSubsystem extends SubsystemBase {
           DriveConstants.kRearRightDriveMotorPort,
           DriveConstants.kRearRightTurningMotorPort,
           DriveConstants.kRearRightTurningEncoderPorts,
-          DriveConstants.kRearRightDrive,
-          DriveConstants.kRearRightTurningMotor,
-          DriveConstants.kRearRightEncoder,
+          DriveConstants.kRearRightDriveReversed,
+          DriveConstants.kRearRightTurningMotorReversed,
+          DriveConstants.kRearRightEncoderReversed,
           DriveConstants.kRearRightEncoderOffset);
 
   private final SwerveModule m_frontRight = //Q4
@@ -71,9 +71,9 @@ public class DriveSubsystem extends SubsystemBase {
           DriveConstants.kFrontRightDriveMotorPort,
           DriveConstants.kFrontRightTurningMotorPort,
           DriveConstants.kFrontRightTurningEncoderPorts,
-          DriveConstants.kFrontRightDrive,
-          DriveConstants.kFrontRightTurningMotor,
-          DriveConstants.kFrontRightEncoder,
+          DriveConstants.kFrontRightDriveReversed,
+          DriveConstants.kFrontRightTurningMotorReversed,
+          DriveConstants.kFrontRightEncoderReversed,
           DriveConstants.kFrontRightEncoderOffset);
 
   private final SwerveModule[] m_modules = new SwerveModule[]{
