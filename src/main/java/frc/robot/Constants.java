@@ -294,6 +294,9 @@ public final class Constants {
     public static final int kAlgaeProcessorPOV = 180;
     public static final int kExtendClimberAxis = kLeftTriggerAxis;
     public static final int kRetractClimberAxis = kRightTriggerAxis;
+    public static final int kCoralIntake2 = 0;
+    public static final int kCoralIntake5 = 90;
+    public static final int kCoralIntake8 = 180;
 
     public static final double kTriggerAcuationValue = 0.5;
     

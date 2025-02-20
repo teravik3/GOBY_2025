@@ -24,10 +24,12 @@ import frc.robot.Constants.HandlerConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.FaceReef;
 import frc.robot.commands.FaceStation;
+import frc.robot.commands.GetCoral;
 import frc.robot.subsystems.CameraSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.HandlerSubsystem;
 import frc.robot.utilities.FieldPoseUtil;
+import frc.robot.utilities.FieldPoseUtil.CoralStationSubPose;
 
 /*
  * This class is where the bulk of the robot should be declared.  Since Command-based is a
@@ -45,6 +47,8 @@ public class RobotContainer {
   GenericHID m_operatorController = new GenericHID(OIConstants.kOperatorControllerPort);
   FieldPoseUtil m_fieldPoseUtil = new FieldPoseUtil();
   double m_reverseFactor = DriverStation.getAlliance().get() == Alliance.Blue ? 1 : -1;
+
+  private CoralStationSubPose m_selectedCoralStationSlot = CoralStationSubPose.FIVE;
 
   private static double joystickTransform(double value) {
     double transformedValue = MathUtil.applyDeadband(value, OIConstants.kJoystickDeadband);
@@ -131,6 +135,18 @@ public class RobotContainer {
         () -> getYSpeedInput(),
         m_fieldPoseUtil));
 
+    new Trigger(() -> m_driverController.getPOV() == OIConstants.kCoralIntake2)
+      .debounce(OIConstants.kDebounceSeconds)
+      .onTrue(Commands.runOnce(() -> m_selectedCoralStationSlot = CoralStationSubPose.TWO));
+
+    new Trigger(() -> m_driverController.getPOV() == OIConstants.kCoralIntake5)
+      .debounce(OIConstants.kDebounceSeconds)
+      .onTrue(Commands.runOnce(() -> m_selectedCoralStationSlot = CoralStationSubPose.FIVE));
+
+    new Trigger(() -> m_driverController.getPOV() == OIConstants.kCoralIntake8)
+      .debounce(OIConstants.kDebounceSeconds)
+      .onTrue(Commands.runOnce(() -> m_selectedCoralStationSlot = CoralStationSubPose.EIGHT));
+
     new JoystickButton(m_driverController, OIConstants.kFaceProcessorButton)
       .debounce(OIConstants.kDebounceSeconds)
       .whileTrue(new Command() {}); //TODO: Create a command to align to the processor
@@ -199,9 +215,7 @@ public class RobotContainer {
       
       new JoystickButton(m_operatorController, OIConstants.kIntakeCoralButton)
         .debounce(OIConstants.kDebounceSeconds)
-        .onTrue(Commands.runOnce(() -> {
-          m_handler.intakeCoral();
-        }, m_handler));
+        .onTrue(new GetCoral(m_robotDrive, m_handler, m_selectedCoralStationSlot));
       
       new JoystickButton(m_operatorController, OIConstants.kEjectButton)
         .debounce(OIConstants.kDebounceSeconds)
