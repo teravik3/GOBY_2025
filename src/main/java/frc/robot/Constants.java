@@ -566,5 +566,7 @@ public final class Constants {
       new Translation2d(Units.degreesToRadians(-40.0), 0.924);
     public static final Translation2d kPositionHiAlgae =
       new Translation2d(Units.degreesToRadians(-40.0), 1.328);
+    public static final double kIntakeAngle = 55;
+    public static final double kIntakeHeight = 0.95; //TODO: calculate elevator height taking into account angle and stinger length
   }
 }

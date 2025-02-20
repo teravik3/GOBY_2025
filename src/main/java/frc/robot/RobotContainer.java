@@ -26,6 +26,7 @@ import frc.robot.commands.FaceReef;
 import frc.robot.commands.FaceStation;
 import frc.robot.commands.GetCoral;
 import frc.robot.subsystems.CameraSubsystem;
+import frc.robot.subsystems.Crane;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.HandlerSubsystem;
 import frc.robot.utilities.FieldPoseUtil;
@@ -43,6 +44,7 @@ public class RobotContainer {
     CameraConstants.kEnable ? new CameraSubsystem(CameraConstants.kCameraConfigs) : null;
   public final DriveSubsystem m_robotDrive = new DriveSubsystem(m_cameraSystem);
   private final HandlerSubsystem m_handler = new HandlerSubsystem(HandlerConstants.kMotorID, HandlerConstants.kmotorConfig);
+  private final Crane m_crane = new Crane();
   GenericHID m_driverController = new GenericHID(OIConstants.kDriverControllerPort);
   GenericHID m_operatorController = new GenericHID(OIConstants.kOperatorControllerPort);
   FieldPoseUtil m_fieldPoseUtil = new FieldPoseUtil();
@@ -215,7 +217,7 @@ public class RobotContainer {
       
       new JoystickButton(m_operatorController, OIConstants.kIntakeCoralButton)
         .debounce(OIConstants.kDebounceSeconds)
-        .onTrue(new GetCoral(m_robotDrive, m_handler, m_selectedCoralStationSlot));
+        .onTrue(new GetCoral(m_robotDrive, m_handler, m_crane, m_selectedCoralStationSlot));
       
       new JoystickButton(m_operatorController, OIConstants.kEjectButton)
         .debounce(OIConstants.kDebounceSeconds)
