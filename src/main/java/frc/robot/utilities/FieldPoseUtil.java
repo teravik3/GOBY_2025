@@ -1,6 +1,7 @@
 package frc.robot.utilities;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import edu.wpi.first.apriltag.AprilTag;
@@ -199,5 +200,19 @@ public class FieldPoseUtil {
 
   public ArrayList<Pose2d> getCoralStations() {
     return m_coralStations;
+  }
+
+  public CoralStationPose closestStation(Pose2d robotPose) {
+    ArrayList<AprilTag> coralStations = new ArrayList<>(List.of(m_aprilTags.coralStationLeft, m_aprilTags.coralStationRight));
+    Translation2d robotPos = robotPose.getTranslation();
+    AprilTag nearestStation = coralStations.get(0);
+
+    for (AprilTag station : coralStations) {
+      if (station.pose.toPose2d().getTranslation().getDistance(robotPos) < nearestStation.pose.toPose2d().getTranslation().getDistance(robotPos)) {
+        nearestStation = station;
+      }
+    }
+    
+    return nearestStation == m_aprilTags.coralStationLeft ? CoralStationPose.LEFT : CoralStationPose.RIGHT;
   }
 }
