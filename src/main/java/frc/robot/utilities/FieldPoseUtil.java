@@ -93,6 +93,14 @@ public class FieldPoseUtil {
         case RIGHT: return aprilTags.coralStationRight;
       }
     }
+
+    private static CoralStationPose ofAprilTag(AprilTag aprilTag, AprilTags aprilTags) {
+      if (aprilTag == aprilTags.coralStationLeft) {
+        return LEFT;
+      } 
+      assert(aprilTag == aprilTags.coralStationRight);
+      return RIGHT;
+    }
   }
 
   public enum CoralStationSubPose {
@@ -213,6 +221,6 @@ public class FieldPoseUtil {
       }
     }
     
-    return nearestStation == m_aprilTags.coralStationLeft ? CoralStationPose.LEFT : CoralStationPose.RIGHT;
+    return CoralStationPose.ofAprilTag(nearestStation, m_aprilTags);
   }
 }
