@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.revrobotics.spark.ClosedLoopSlot;
 
@@ -53,7 +54,7 @@ public class RobotContainer {
   GenericHID m_operatorController = new GenericHID(OIConstants.kOperatorControllerPort);
   FieldPoseUtil m_fieldPoseUtil = new FieldPoseUtil();
   double m_reverseFactor = DriverStation.getAlliance().get() == Alliance.Blue ? 1 : -1;
-
+  
   private CoralStationSubPose m_selectedCoralStationSlot = CoralStationSubPose.FIVE;
 
   private static double joystickTransform(double value) {
@@ -93,20 +94,22 @@ public class RobotContainer {
     m_robotDrive.setDefaultCommand(
       // The left stick controls translation of the robot.
       // Turning is controlled by the X axis of the right stick.
-        new RunCommand(
-          () -> {
-            m_robotDrive.drive(
-              getXSpeedInput(),
-              getYSpeedInput(),
-              getRotationSpeedInput(),
-              true);
-          }, m_robotDrive
-        )
-      );
+      new RunCommand(
+        () -> {
+          m_robotDrive.drive(
+            getXSpeedInput(),
+            getYSpeedInput(),
+            getRotationSpeedInput(),
+            true);
+        }, m_robotDrive
+      )
+    );
 
-      m_chooser.setDefaultOption("Empty Auto", new PathPlannerAuto("Empty Auto"));
-      m_chooser.addOption("Middle Cross The Line", new PathPlannerAuto("Middle Cross The Line"));
-      SmartDashboard.putData(m_chooser);
+    NamedCommands.registerCommand("RightHourTwoAuto", new CoralPlacement(m_robotDrive, m_handler, m_crane, ReefSubPose.A, CraneConstants.kPositionL2));
+    m_chooser.setDefaultOption("Empty Auto", new PathPlannerAuto("Empty Auto"));
+    m_chooser.addOption("Middle Cross The Line", new PathPlannerAuto("Middle Cross The Line"));
+    m_chooser.addOption("Right auto with place", new PathPlannerAuto("Right Start and Place"));
+    SmartDashboard.putData(m_chooser);
   }
 
   public void initializePreloaded() {
