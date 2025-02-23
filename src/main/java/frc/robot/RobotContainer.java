@@ -106,9 +106,11 @@ public class RobotContainer {
     );
 
     NamedCommands.registerCommand("RightHourTwoAuto", new CoralPlacement(m_robotDrive, m_handler, m_crane, ReefSubPose.A, CraneConstants.kPositionL2));
+    NamedCommands.registerCommand("LeftHourTenAuto", new CoralPlacement(m_robotDrive, m_handler, m_crane, ReefSubPose.A, CraneConstants.kPositionL2));
     m_chooser.setDefaultOption("Empty Auto", new PathPlannerAuto("Empty Auto"));
     m_chooser.addOption("Middle Cross The Line", new PathPlannerAuto("Middle Cross The Line"));
     m_chooser.addOption("Right auto with place", new PathPlannerAuto("Right Start and Place"));
+    m_chooser.addOption("Left auto with place", new PathPlannerAuto("Left Start and Place"));
     SmartDashboard.putData(m_chooser);
   }
 
