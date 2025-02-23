@@ -82,6 +82,10 @@ public class HandlerSubsystem extends SubsystemBase {
     return m_distanceSensor.getDistance();
   }
 
+  public boolean isReefAligned() {
+    return m_distanceSensor.isProximate();
+  }
+
   public void intakeCoral() {
     switch (m_state) {
       case EMPTY:

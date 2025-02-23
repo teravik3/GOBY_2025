@@ -26,7 +26,8 @@ public class CoralPlacement extends SequentialCommandGroup {
 
     addCommands(
       driveToPose,
-      //TODO: strafe and align
+      new Strafe(handler, drive)
+        .until(() -> m_handler.isReefAligned()),
       Commands.runOnce(() -> m_crane.moveTo(cranePosition)),
       Commands.waitUntil(() -> m_crane.atSetpoint().isPresent()),
       Commands.runOnce(() -> m_handler.eject()),
