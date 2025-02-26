@@ -70,7 +70,8 @@ public class FieldPoseUtil {
 
   public enum ReefSubPose {
     A(-1),
-    B(1);
+    B(1),
+    ALGAE(0);
 
     int m_offsetDirection; // Negative is left.
 
