@@ -27,6 +27,7 @@ import frc.robot.Constants.OIConstants;
 import frc.robot.commands.CoralPlacement;
 import frc.robot.commands.FaceReef;
 import frc.robot.commands.FaceStation;
+import frc.robot.commands.GetAlgae;
 import frc.robot.commands.GetCoral;
 import frc.robot.subsystems.CameraSubsystem;
 import frc.robot.subsystems.Crane;
@@ -248,14 +249,18 @@ public class RobotContainer {
       new Trigger(() -> m_operatorController.getPOV() == OIConstants.kHighAlgaePOV)
         .debounce(OIConstants.kDebounceSeconds)
         .onTrue(Commands.runOnce(() -> {
-          //m_crane.moveTo(FieldConstants.kHighAlgae)
-        })); //TODO: Requirements also need to include the crane subsystem
+          // new GetAlgae(
+          //   m_robotDrive, m_handler, m_crane, m_fieldPoseUtil, 
+          //   ReefSubPose.ALGAE, CraneConstants.kPositionHiAlgae);
+        }, m_robotDrive, m_crane));
 
       new Trigger(() -> m_operatorController.getPOV() == OIConstants.kLowAlgaePOV)
         .debounce(OIConstants.kDebounceSeconds)
         .onTrue(Commands.runOnce(() -> {
-          //m_crane.moveTo(FieldConstants.kLowAlgae)
-        })); //TODO: Requirements also need to include the crane subsystem
+          // new GetAlgae(
+          //   m_robotDrive, m_handler, m_crane, m_fieldPoseUtil, 
+          //   ReefSubPose.ALGAE, CraneConstants.kPositionLoAlgae);
+        }, m_robotDrive, m_crane));
 
       new Trigger(() -> m_operatorController.getPOV() == OIConstants.kAlgaeProcessorPOV)
         .debounce(OIConstants.kDebounceSeconds)
