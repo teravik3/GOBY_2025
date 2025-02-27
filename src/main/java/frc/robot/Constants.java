@@ -311,6 +311,7 @@ public final class Constants {
     public static final int kCoralIntake5 = 90;
     public static final int kCoralIntake8 = 180;
     public static final int kManualCraneMode = kRightJoy;
+    public static final int kManualOperatorMode = kLeftJoy;
     public static final int kSlowModeButton = kRightBumper;
 
     public static final double kTriggerAcuationValue = 0.5;

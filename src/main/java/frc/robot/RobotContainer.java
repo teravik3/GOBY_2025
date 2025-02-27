@@ -182,108 +182,117 @@ public class RobotContainer {
       .onTrue(Commands.runOnce(() -> m_selectedCoralStationSlot = CoralStationSubPose.EIGHT));
 
     new JoystickButton(m_driverController, OIConstants.kFaceProcessorButton)
-      .debounce(OIConstants.kDebounceSeconds)
-      .whileTrue(new Command() {}); //TODO: Create a command to align to the processor
+     .debounce(OIConstants.kDebounceSeconds)
+     .whileTrue(new Command() {}); //TODO: Create a command to align to the processor
 
+      // Manual move crane
       new JoystickButton(m_operatorController, OIConstants.kManualCraneMode)
         .debounce(OIConstants.kDebounceSeconds)
         .whileTrue(Commands.run(() -> {
           m_crane.move(getPivotAxis(), getElevatorAxis());
         }, m_crane));
 
-      new JoystickButton(m_operatorController, OIConstants.kLevel1Button)
+      // Manual crane to level one
+      new Trigger(() -> 
+          m_operatorController.getRawButton(OIConstants.kManualOperatorMode) &&
+          m_operatorController.getRawButton(OIConstants.kLevel1Button))
         .debounce(OIConstants.kDebounceSeconds)
         .onTrue(Commands.runOnce(() ->
           m_crane.moveTo(CraneConstants.kPositionL1), m_crane));
 
-      new JoystickButton(m_operatorController, OIConstants.kLevel2Button)
+      // Manual crane to level two
+      new Trigger(() -> 
+          m_operatorController.getRawButton(OIConstants.kManualOperatorMode) &&
+          m_operatorController.getRawButton(OIConstants.kLevel2Button))
         .debounce(OIConstants.kDebounceSeconds)
         .onTrue(Commands.runOnce(() ->
           m_crane.moveTo(CraneConstants.kPositionL2), m_crane));
 
-      new JoystickButton(m_operatorController, OIConstants.kLevel3Button)
+      // Manual crane to level three
+      new Trigger(() -> 
+          m_operatorController.getRawButton(OIConstants.kManualOperatorMode) &&
+          m_operatorController.getRawButton(OIConstants.kLevel3Button))
         .debounce(OIConstants.kDebounceSeconds)
         .onTrue(Commands.runOnce(() ->
           m_crane.moveTo(CraneConstants.kPositionL3), m_crane));
 
-      new JoystickButton(m_operatorController, OIConstants.kIntakeCoralButton)
+      // Manual intake coral
+      new Trigger(() -> 
+          m_operatorController.getRawButton(OIConstants.kManualOperatorMode) &&
+          m_operatorController.getRawButton(OIConstants.kIntakeCoralButton))
         .debounce(OIConstants.kDebounceSeconds)
         .onTrue(Commands.runOnce(() ->
-          m_crane.moveTo(CraneConstants.kPositionIntake), m_crane));
+          m_handler.intakeCoral(), m_handler));
 
-      // new JoystickButton(m_operatorController, OIConstants.k)
-      //   .debounce(OIConstants.kDebounceSeconds)
-      //   .onTrue(Commands.runOnce(() ->
-      //     m_crane.moveTo(CraneConstants.kPositionL3), m_crane));
+      // Automatic level two A placement
+      new Trigger(() ->
+          m_operatorController.getRawButton(OIConstants.kASideButton) &&
+          m_operatorController.getRawButton(OIConstants.kLevel2Button))
+        .debounce(OIConstants.kDebounceSeconds)
+        .onTrue(new CoralPlacement(
+          m_robotDrive, m_handler, m_crane, m_fieldPoseUtil,
+          ReefSubPose.A, CraneConstants.kPositionL2));
 
-      // new Trigger(() ->
-      //     m_operatorController.getRawButton(OIConstants.kASideButton) &&
-      //     m_operatorController.getRawButton(OIConstants.kLevel2Button))
-      //   .debounce(OIConstants.kDebounceSeconds)
-      //   .onTrue(new CoralPlacement(
-      //     m_robotDrive, m_handler, m_crane, m_fieldPoseUtil,
-      //     ReefSubPose.A, CraneConstants.kPositionL2));
+      // Automatic level three A placement
+      new Trigger(() ->
+          m_operatorController.getRawButton(OIConstants.kASideButton) &&
+          m_operatorController.getRawButton(OIConstants.kLevel3Button))
+        .debounce(OIConstants.kDebounceSeconds)
+        .onTrue(new CoralPlacement(
+          m_robotDrive, m_handler, m_crane, m_fieldPoseUtil,
+          ReefSubPose.A, CraneConstants.kPositionL3));
 
-      // new Trigger(() ->
-      //     m_operatorController.getRawButton(OIConstants.kASideButton) &&
-      //     m_operatorController.getRawButton(OIConstants.kLevel3Button))
-      //   .debounce(OIConstants.kDebounceSeconds)
-      //   .onTrue(new CoralPlacement(
-      //     m_robotDrive, m_handler, m_crane, m_fieldPoseUtil,
-      //     ReefSubPose.A, CraneConstants.kPositionL3));
+      // Automatic level two B placement
+      new Trigger(() ->
+          m_operatorController.getRawButton(OIConstants.kBSideButton) &&
+          m_operatorController.getRawButton(OIConstants.kLevel2Button))
+        .debounce(OIConstants.kDebounceSeconds)
+        .onTrue(new CoralPlacement(
+          m_robotDrive, m_handler, m_crane, m_fieldPoseUtil,
+          ReefSubPose.B, CraneConstants.kPositionL2));
 
-      // new Trigger(() ->
-      //     m_operatorController.getRawButton(OIConstants.kBSideButton) &&
-      //     m_operatorController.getRawButton(OIConstants.kLevel2Button))
-      //   .debounce(OIConstants.kDebounceSeconds)
-      //   .onTrue(new CoralPlacement(
-      //     m_robotDrive, m_handler, m_crane, m_fieldPoseUtil,
-      //     ReefSubPose.B, CraneConstants.kPositionL2));
+      // Automatic level three B placement
+      new Trigger(() ->
+          m_operatorController.getRawButton(OIConstants.kBSideButton) &&
+          m_operatorController.getRawButton(OIConstants.kLevel3Button))
+        .debounce(OIConstants.kDebounceSeconds)
+        .onTrue(new CoralPlacement(
+          m_robotDrive, m_handler, m_crane, m_fieldPoseUtil,
+          ReefSubPose.B, CraneConstants.kPositionL3));
 
-      // new Trigger(() ->
-      //     m_operatorController.getRawButton(OIConstants.kBSideButton) &&
-      //     m_operatorController.getRawButton(OIConstants.kLevel3Button))
-      //   .debounce(OIConstants.kDebounceSeconds)
-      //   .onTrue(new CoralPlacement(
-      //     m_robotDrive, m_handler, m_crane, m_fieldPoseUtil,
-      //     ReefSubPose.B, CraneConstants.kPositionL3));
-
+      // Automatic level one placement
       // new JoystickButton(m_operatorController, OIConstants.kLevel1Button)
       //   .debounce(OIConstants.kDebounceSeconds)
-      //   .onTrue(Commands.runOnce(() -> {
-      //     //m_crane.moveTo(FieldConstants.kLevel1)
-      //   }, m_robotDrive)); //TODO: Requirements also need to include the crane subsystem
+      //   .onTrue(new CoralPlacement(
+      //     m_robotDrive, m_handler, m_crane, m_fieldPoseUtil,
+      //     ReefSubPose.A, CraneConstants.kPositionL1));
 
+      // Automatic high algae
       new Trigger(() -> m_operatorController.getPOV() == OIConstants.kHighAlgaePOV)
         .debounce(OIConstants.kDebounceSeconds)
         .onTrue(Commands.runOnce(() -> {
-          // new GetAlgae(
-          //   m_robotDrive, m_handler, m_crane, m_fieldPoseUtil, 
-          //   ReefSubPose.ALGAE, CraneConstants.kPositionHiAlgae);
+          new GetAlgae(
+            m_robotDrive, m_handler, m_crane, m_fieldPoseUtil, 
+            ReefSubPose.ALGAE, CraneConstants.kPositionHiAlgae);
         }, m_robotDrive, m_crane));
 
+      // Automatic low algae
       new Trigger(() -> m_operatorController.getPOV() == OIConstants.kLowAlgaePOV)
         .debounce(OIConstants.kDebounceSeconds)
         .onTrue(Commands.runOnce(() -> {
-          // new GetAlgae(
-          //   m_robotDrive, m_handler, m_crane, m_fieldPoseUtil, 
-          //   ReefSubPose.ALGAE, CraneConstants.kPositionLoAlgae);
+          new GetAlgae(
+            m_robotDrive, m_handler, m_crane, m_fieldPoseUtil, 
+            ReefSubPose.ALGAE, CraneConstants.kPositionLoAlgae);
         }, m_robotDrive, m_crane));
 
-      new Trigger(() -> m_operatorController.getPOV() == OIConstants.kAlgaeProcessorPOV)
-        .debounce(OIConstants.kDebounceSeconds)
-        .onTrue(Commands.runOnce(() -> {
-          //m_crane.moveTo(FieldConstants.kAlgaeProcessor)
-          //Robot also needs to move to right position
-        })); //TODO: Requirements also need to include the crane subsystem
+      // new Trigger(() -> m_operatorController.getPOV() == OIConstants.kAlgaeProcessorPOV)
+      //   .debounce(OIConstants.kDebounceSeconds)
+      //   .onTrue(Commands.runOnce(() -> {
+      //     //m_crane.moveTo(FieldConstants.kAlgaeProcessor)
+      //     //Robot also needs to move to right position
+      //   })); //TODO: Requirements also need to include the crane subsystem
 
-      new Trigger(() -> m_operatorController.getPOV() == OIConstants.kAlgaeProcessorPOV)
-        .debounce(OIConstants.kDebounceSeconds)
-        .onTrue(Commands.runOnce(() -> {
-          //m_crane.moveTo(FieldConstants.kAlgaeProcessor)
-          //Robot also needs to move to right position
-        })); //TODO: Requirements also need to include the crane subsystem
-
+      // Manual algae intake
       new Trigger(() -> m_operatorController.getPOV() == OIConstants.kIntakeALgaePOV)
         .debounce(OIConstants.kDebounceSeconds)
         .whileTrue(Commands.runOnce(() -> {
@@ -293,11 +302,13 @@ public class RobotContainer {
           m_handler.cancelIntake();
         }, m_handler));
 
-      // new JoystickButton(m_operatorController, OIConstants.kIntakeCoralButton)
-      //   .debounce(OIConstants.kDebounceSeconds)
-      //   .onTrue(new GetCoral(m_robotDrive, m_handler, m_crane, m_fieldPoseUtil,
-      //     m_selectedCoralStationSlot));
-
+      // Automatic coral intake
+      new JoystickButton(m_operatorController, OIConstants.kIntakeCoralButton)
+        .debounce(OIConstants.kDebounceSeconds)
+        .onTrue(new GetCoral(m_robotDrive, m_handler, m_crane, m_fieldPoseUtil,
+          m_selectedCoralStationSlot));
+      
+      // Eject
       new JoystickButton(m_operatorController, OIConstants.kEjectButton)
         .debounce(OIConstants.kDebounceSeconds)
         .onTrue(Commands.runOnce(() -> {
