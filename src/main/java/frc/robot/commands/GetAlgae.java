@@ -29,7 +29,7 @@ public class GetAlgae extends SequentialCommandGroup {
       drive);
 
     addCommands(
-      driveToPose,
+      // driveToPose,
       Commands.runOnce(() -> m_crane.moveTo(cranePosition)),
       Commands.waitUntil(() -> m_crane.atSetpoint().isPresent()),
       Commands.runOnce(() -> m_handler.intakeAlgae()),

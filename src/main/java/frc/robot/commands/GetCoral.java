@@ -30,7 +30,7 @@ public class GetCoral extends SequentialCommandGroup {
       drive);
 
     addCommands(
-      driveToPose,
+      // driveToPose,
       Commands.runOnce(() -> m_crane.moveTo(CraneConstants.kPositionIntake)),
       Commands.runOnce(() -> m_handler.intakeCoral()),
       Commands.waitUntil(() -> m_handler.isLoadedCoral()),
