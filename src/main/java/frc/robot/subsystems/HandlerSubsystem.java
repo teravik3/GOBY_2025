@@ -36,7 +36,6 @@ public class HandlerSubsystem extends SubsystemBase {
     HandlerConstants.kMotorPIDFVelocity);
 
   private State m_state = State.EMPTY;
-  private State m_stateOnEmpty = State.EMPTY;
   private final SparkFlex m_motor;
   private final SparkClosedLoopController m_motorController;
   private final RelativeEncoder m_encoder;
@@ -75,62 +74,6 @@ public class HandlerSubsystem extends SubsystemBase {
       HandlerConstants.kDebounceTime);
   }
 
-  private void intakeCoralImpl() {
-    m_motorController.setReference(
-      HandlerConstants.kIntakeSpeedCoral,
-      ControlType.kMAXMotionVelocityControl,
-      HandlerConstants.kPIDFSlotVelocity);
-    m_state = State.INTAKING_CORAL;
-  }
-
-  private void intakeAlgaeImpl() {
-    m_motorController.setReference(
-      HandlerConstants.kIntakeSpeedAlgae,
-      ControlType.kMAXMotionVelocityControl,
-      HandlerConstants.kPIDFSlotVelocity);
-    m_state = State.INTAKING_ALGAE;
-  }
-
-  private void cancelCoralImpl() {
-    m_motor.stopMotor();
-    m_state = State.CANCELLING_CORAL;
-  }
-
-  private void cancelAlgaeImpl() {
-    m_motor.stopMotor();
-    m_state = State.CANCELLING_ALGAE;
-  }
-
-  // Coral/algae intake can cancel each other, and once the handler is empty, this method
-  // transitions to intaking the other type of gamepiece.
-  private void onEmpty() {
-    switch (m_stateOnEmpty) {
-      case EMPTY: {
-        m_state = State.EMPTY;
-        break;
-      }
-      case INTAKING_CORAL: {
-        intakeCoralImpl();
-        break;
-      }
-      case INTAKING_ALGAE: {
-        intakeAlgaeImpl();
-        break;
-      }
-      case LOADING_CORAL:
-      case LOADED_CORAL:
-      case LOADED_ALGAE:
-      case EJECTING_CORAL:
-      case EJECTING_ALGAE:
-      case CANCELLING_CORAL:
-      case CANCELLING_ALGAE: {
-        assert(false);
-        break;
-      }
-    }
-    m_stateOnEmpty = State.EMPTY;
-  }
-
   public void initializePreloaded() {
     m_state = m_chooser.getSelected();
   }
@@ -147,30 +90,21 @@ public class HandlerSubsystem extends SubsystemBase {
     switch (m_state) {
       case EMPTY:
       case CANCELLING_CORAL: {
-        intakeCoralImpl();
+        m_motorController.setReference(
+          HandlerConstants.kIntakeSpeedCoral,
+          ControlType.kMAXMotionVelocityControl,
+          HandlerConstants.kPIDFSlotVelocity);
+        m_state = State.INTAKING_CORAL;
         break;
       }
-      case INTAKING_CORAL: {
-        break;
-      }
-      case INTAKING_ALGAE: {
-        cancelAlgaeImpl();
-        m_stateOnEmpty = State.INTAKING_CORAL;
-        break;
-      }
+      case INTAKING_CORAL:
+      case INTAKING_ALGAE:
       case LOADING_CORAL:
       case LOADED_CORAL:
-      case LOADED_ALGAE: {
-        break;
-      }
+      case LOADED_ALGAE:
       case EJECTING_CORAL:
-      case EJECTING_ALGAE: {
-        m_stateOnEmpty = State.INTAKING_CORAL;
-        break;
-      }
+      case EJECTING_ALGAE:
       case CANCELLING_ALGAE: {
-        cancelAlgaeImpl();
-        m_stateOnEmpty = State.INTAKING_CORAL;
         break;
       }
     }
@@ -180,24 +114,21 @@ public class HandlerSubsystem extends SubsystemBase {
     switch (m_state) {
       case EMPTY:
       case CANCELLING_ALGAE: {
-        intakeAlgaeImpl();
+        m_motorController.setReference(
+          HandlerConstants.kIntakeSpeedAlgae,
+          ControlType.kMAXMotionVelocityControl,
+          HandlerConstants.kPIDFSlotVelocity);
+        m_state = State.INTAKING_ALGAE;
         break;
       }
-      case INTAKING_CORAL: {
-        cancelCoralImpl();
-        m_stateOnEmpty = State.INTAKING_ALGAE;
-        break;
-      }
+      case INTAKING_CORAL:
       case INTAKING_ALGAE:
       case LOADING_CORAL:
       case LOADED_CORAL:
-      case LOADED_ALGAE: {
-        break;
-      }
+      case LOADED_ALGAE:
       case EJECTING_CORAL:
       case EJECTING_ALGAE:
       case CANCELLING_CORAL: {
-        m_stateOnEmpty = State.INTAKING_ALGAE;
         break;
       }
     }
@@ -205,17 +136,17 @@ public class HandlerSubsystem extends SubsystemBase {
 
   public void cancelIntake() {
     switch (m_state) {
-      case EMPTY: {
-        break;
-      }
       case INTAKING_CORAL: {
-        cancelCoralImpl();
+        m_motor.stopMotor();
+        m_state = State.CANCELLING_CORAL;
         break;
       }
       case INTAKING_ALGAE: {
-        cancelAlgaeImpl();
+        m_motor.stopMotor();
+        m_state = State.CANCELLING_ALGAE;
         break;
       }
+      case EMPTY:
       case LOADING_CORAL:
       case LOADED_CORAL:
       case LOADED_ALGAE:
@@ -318,7 +249,7 @@ public class HandlerSubsystem extends SubsystemBase {
         }
       }
       case LOADING_CORAL: {
-        if (m_backProxSensor.isProximate()) {
+        if (m_backProxSensor.isProximate()){
           m_motor.stopMotor();
           m_state = State.LOADED_CORAL;
         }
@@ -334,7 +265,7 @@ public class HandlerSubsystem extends SubsystemBase {
         double currentTime = Time.getTimeSeconds();
         if (currentTime - m_ejectDelayStartTime >= HandlerConstants.kEjectDelaySeconds) {
           m_motor.stopMotor();
-          onEmpty();
+          m_state = State.EMPTY;
         }
         break;
       }
@@ -342,7 +273,7 @@ public class HandlerSubsystem extends SubsystemBase {
         double currentTime = Time.getTimeSeconds();
         if (currentTime - m_ejectDelayStartTime >= HandlerConstants.kEjectDelaySeconds) {
           m_motor.stopMotor();
-          onEmpty();
+          m_state = State.EMPTY;
         }
         break;
       }
@@ -354,7 +285,7 @@ public class HandlerSubsystem extends SubsystemBase {
             HandlerConstants.kPIDFSlotVelocity);
           m_state = State.LOADING_CORAL;
         } else {
-          onEmpty();
+          m_state = State.EMPTY;
         }
         break;
       }
@@ -362,7 +293,7 @@ public class HandlerSubsystem extends SubsystemBase {
         if (m_algaeProxSensor.isProximate()) {
           m_state = State.LOADED_ALGAE;
         } else {
-          onEmpty();
+          m_state = State.EMPTY;
         }
         break;
       }
