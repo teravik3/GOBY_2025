@@ -255,6 +255,13 @@ public class RobotContainer {
       .onTrue(Commands.runOnce(() ->
         m_crane.moveTo(CraneConstants.kPositionL1a), m_crane));
 
+    // Auto place Level 1
+    new Trigger(() -> 
+        m_operatorController.getRawButton(OIConstants.kReadyClimbButton) && 
+        m_driverController.getRawButton(OIConstants.kAutoDriveButton))
+      .debounce(OIConstants.kDebounceSeconds)
+      .whileTrue(new LevelOnePlacement(m_robotDrive, m_handler, m_crane, m_fieldPoseUtil, ReefSubPose.ALGAE));
+
     // Manual intake coral
     new JoystickButton(m_operatorController, OIConstants.kManualIntake)
       .debounce(OIConstants.kDebounceSeconds)
