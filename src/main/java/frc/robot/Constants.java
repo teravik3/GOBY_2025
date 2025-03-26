@@ -603,7 +603,7 @@ public final class Constants {
     public static final Translation2d kPositionHome =
       new Translation2d(kPivotHome, kElevatorHome);
     public static final Translation2d kPositionL1a =
-      new Translation2d(Units.degreesToRadians(25.0), 0.41);
+      new Translation2d(Units.degreesToRadians(15.0), 0.49);
     public static final Translation2d kPositionL1b =
       new Translation2d(Units.degreesToRadians(15.0), 0.36);
     public static final Translation2d kPositionL2 =
