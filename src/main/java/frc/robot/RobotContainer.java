@@ -152,6 +152,12 @@ public class RobotContainer {
         Commands.waitUntil(() -> m_handler.isEmpty())
       )
     );
+    NamedCommands.registerCommand("Crane to Low Algae", 
+      Commands.sequence(
+        Commands.runOnce(() -> m_crane.moveTo(CraneConstants.kPositionLoAlgae), m_crane),
+        Commands.waitUntil(() -> m_crane.atGoal().isPresent())
+      )
+    );
     NamedCommands.registerCommand("Intake S5",
       new GetCoral(m_robotDrive, m_handler, m_crane, m_fieldPoseUtil, CoralStationSubPose.FIVE));
     m_chooser.setDefaultOption("Empty Auto", new PathPlannerAuto("Empty Auto"));
@@ -162,6 +168,7 @@ public class RobotContainer {
     m_chooser.addOption("Left 10B2", new PathPlannerAuto("Left 10B2"));
     m_chooser.addOption("Left 10B2 8B3", new PathPlannerAuto("Left 10B2 8B3"));
     m_chooser.addOption("Left 10B2 10B3", new PathPlannerAuto("Left 10B2 10B3"));
+    m_chooser.addOption("Center 1", new PathPlannerAuto("Center 1"));
     SmartDashboard.putData(m_chooser);
   }
 
@@ -257,7 +264,7 @@ public class RobotContainer {
 
     // Auto place Level 1
     new Trigger(() -> 
-        m_operatorController.getRawButton(OIConstants.kReadyClimbButton) && 
+        m_operatorController.getRawButton(OIConstants.kLevel1Button) && 
         m_driverController.getRawButton(OIConstants.kAutoDriveButton))
       .debounce(OIConstants.kDebounceSeconds)
       .whileTrue(new LevelOnePlacement(m_robotDrive, m_handler, m_crane, m_fieldPoseUtil, ReefSubPose.ALGAE));

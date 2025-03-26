@@ -17,6 +17,18 @@
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "Crane to Low Algae"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "GetAlgae"
+          }
+        },
+        {
           "type": "path",
           "data": {
             "pathName": "H12 to Algae Dump"
